@@ -14,10 +14,10 @@ const Sidebar = () => {
         <Flex position="relative" h="100vh">
             <Box
                 position="fixed"
-                left={isOpen ? "0" : "-15rem"}
+                left={isOpen ? "0" : "-12rem"}
                 top="0"
                 h="100vh"
-                w="15rem"
+                w="12rem"
                 bg="gray.100"
                 color="black"
                 p="1rem"

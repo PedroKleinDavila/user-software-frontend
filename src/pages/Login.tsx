@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import { verificaUsuario, createUser } from "../services/userService";
+import { verificaUsuario, createUser, teste } from "../services/userService";
 import { IUser } from "../types/types";
 
 const Login = () => {
@@ -18,9 +18,9 @@ const Login = () => {
 
     const handleLoginClick = async (loginData: IUser) => {
         const user = await verificaUsuario(loginData);
-        if (user !== null) {
-            localStorage.setItem("user", user[0].level);
-            localStorage.setItem("email", user[0].email);
+        if (user.level) {
+            localStorage.setItem("user", user.level);
+            localStorage.setItem("email", user.email);
             navigate("/usuarios");
         } else {
             toast.error("Usuário ou senha inválidos");
@@ -48,10 +48,12 @@ const Login = () => {
     const [isLoginVisible, setIsLoginVisible] = useState(true);
 
     const handleChangeTabSignup = () => {
+        teste()
         setIsLoginVisible(false);
     };
 
     const handleChangeTabLogin = () => {
+        teste()
         setIsLoginVisible(true);
     };
 

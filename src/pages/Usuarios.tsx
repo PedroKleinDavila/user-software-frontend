@@ -34,14 +34,14 @@ const Usuarios = () => {
     const editOrDelete = async (action: string, email: string) => {
         const user = await findUser(email);
         if (action === "Editar usuário") {
-            setId(user[0].id);
-            setName(user[0].name);
-            setEmail(user[0].email);
-            setLevel(Number(user[0].level));
-            setPassword(user[0].password);
+            setId(user.id);
+            setName(user.name);
+            setEmail(user.email);
+            setLevel(Number(user.level));
+            setPassword(user.password);
             setisEditOpen(true);
         } else if (action === "Deletar usuário") {
-            setEmail(user[0].email);
+            setEmail(user.email);
             setIsDeleteModalOpen(true);
         }
     };
@@ -80,17 +80,15 @@ const Usuarios = () => {
                     <Flex
                         bgColor="white"
                         h="40rem"
-                        overflowY="auto"
                         overflowX="hidden"
                         w="70rem"
                         borderRadius="0.4rem"
                         align="center"
-                        justify="center"
                         direction="column"
                         m="auto"
                         mt="2.5rem"
                     >
-                        <Flex w="68rem" mt={users.length > 11 ? "auto" : "0rem"} justify="space-between">
+                        <Flex w="68rem" justify="space-between" m="1rem">
                             <Text fontSize="2rem" fontWeight="bold" color="black" textAlign="left">Usuários</Text>
                             {userLevel > 1 ? (
                                 <Button

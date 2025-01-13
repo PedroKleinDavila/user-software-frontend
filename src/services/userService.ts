@@ -1,24 +1,61 @@
 import toast from "react-hot-toast";
+import axios from "axios";
 import { IUser } from "../types/types";
-
+async function teste() {
+    const response = await axios.get(
+        "http://localhost:3000/user",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    console.log(response.data);
+}
+async function getUsers() {
+    const response = await axios.get(
+        "http://localhost:3000/user",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    const users = response.data;
+    const finalUsers = users.map((user: IUser) => {
+        return { name: user.name, email: user.email, level: user.level };
+    });
+    return finalUsers;
+}
 async function findUser(email: string) {
-    const response = await fetch(`http://localhost:3000/users?email=${email}`);
-    const user = await response.json();
-    if (user.length !== 0) {
-        return user;
+    try {
+        const response = await axios.get(
+            `http://localhost:3000/user/email/${email}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        if (response.data && response.data.length !== 0) {
+            return response.data;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error finding user:", error);
+        return null;
     }
-    return null;
 }
 async function verificaUsuario(user: IUser) {
-    const response = await fetch(`http://localhost:3000/users?email=${user.email}`);
-    const usuario = await response.json();
-    if (usuario.length !== 0) {
-        if (usuario[0].password !== user.password) {
-            return null;
+    const response = await axios.get(
+        `http://localhost:3000/user/login?email=${user.email}&password=${user.password}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
         }
-        return usuario;
-    }
-    return null;
+    );
+    return response.data;
 }
 async function createUser(user: IUser) {
     const existe = await findUser(user.email);
@@ -26,69 +63,71 @@ async function createUser(user: IUser) {
         toast.error("Usuário com esse email já existe");
         return false;
     }
-    const finalUser = { email: user.email, name: user.name, password: user.password, level: 1, code: 0, isValid: false };
-    const response = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(finalUser),
-    });
-    const newUser = await response.json();
-    if (newUser) {
-        toast.success("Usuário cadastrado com sucesso");
-        return true;
+
+    const finalUser = { email: user.email, name: user.name, password: user.password };
+    console.log(finalUser);
+    try {
+        const response = await axios.post("http://localhost:3000/user/signup", finalUser, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.data) {
+            toast.success("Usuário cadastrado com sucesso");
+            return true;
+        }
+    } catch (error) {
+        console.error("Erro ao cadastrar usuário:", error);
+        toast.error("Erro ao cadastrar usuário");
     }
-    toast.error("Erro ao cadastrar usuário");
+
     return false;
 }
-async function getUsers() {
-    const response = await fetch("http://localhost:3000/users");
-    const users = await response.json();
-    const finalUsers = users.map((user: IUser) => {
-        return { name: user.name, email: user.email, level: user.level };
-    });
-    return finalUsers;
-}
 async function updateUser(user: IUser, id: string) {
-    const response1 = await fetch(`http://localhost:3000/users/${id}`);
-    const usuarioAtual = await response1.json();
-    if (usuarioAtual.email === user.email) {
-        const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level, code: 0, isValid: false };
-        const response = await fetch(`http://localhost:3000/users/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(finalUser),
-        });
-        const updatedUser = await response.json();
-        if (updatedUser) {
-            toast.success("Usuário atualizado com sucesso");
-            return true;
+    try {
+        const response1 = await axios.get(`http://localhost:3000/user/id/${id}`);
+        const usuarioAtual = response1.data;
+
+        if (usuarioAtual.email === user.email) {
+            const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level };
+            const updateResponse = await axios.put(`http://localhost:3000/user/id/${id}`, finalUser, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (updateResponse.data) {
+                localStorage.setItem("user", (finalUser.level).toString());
+                localStorage.setItem("email", finalUser.email);
+                toast.success("Usuário atualizado com sucesso");
+                return true;
+            }
+        } else {
+            const existe = await findUser(user.email);
+            if (existe !== null) {
+                toast.error("Usuário com esse email já existe");
+                return false;
+            }
+
+            const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level };
+            const updateResponse = await axios.put(`http://localhost:3000/user/id/${id}`, finalUser, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (updateResponse.data) {
+                toast.success("Usuário atualizado com sucesso");
+                return true;
+            }
         }
-        return false;
-    } else {
-        const existe = await findUser(user.email);
-        if (existe !== null) {
-            toast.error("Usuário com esse email já existe");
-            return false;
-        }
-        const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level, code: 0, isValid: false };
-        const response = await fetch(`http://localhost:3000/users/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(finalUser),
-        });
-        const updatedUser = await response.json();
-        if (updatedUser) {
-            toast.success("Usuário atualizado com sucesso");
-            return true;
-        }
+    } catch (error) {
+        console.log("Erro ao atualizar usuário:", error);
+        toast.error("Erro ao atualizar usuário");
         return false;
     }
+    return false;
 }
 async function createUserLoggedIn(user: IUser) {
     const existe = await findUser(user.email);
@@ -96,37 +135,55 @@ async function createUserLoggedIn(user: IUser) {
         toast.error("Usuário com esse email já existe");
         return false;
     }
-    const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level, code: 0, isValid: false };
-    const response = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(finalUser),
-    });
-    const newUser = await response.json();
-    if (newUser) {
-        toast.success("Usuário cadastrado com sucesso");
-        return true;
+
+    const finalUser = {
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        level: user.level,
+    };
+
+    try {
+        const response = await axios.post("http://localhost:3000/user/create", finalUser, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.data) {
+            toast.success("Usuário cadastrado com sucesso");
+            return true;
+        }
+    } catch (error) {
+        console.log("Erro ao cadastrar usuário:", error);
+        toast.error("Erro ao cadastrar usuário");
     }
+
     return false;
 }
 async function deleteUser(email: string) {
     const email1 = localStorage.getItem("email");
+
     if (email1 === email) {
         toast.error("Você não pode deletar o próprio usuário");
         return false;
     }
+
     const user = await findUser(email);
+
     if (user) {
-        const response = await fetch(`http://localhost:3000/users/${user[0].id}`, {
-            method: "DELETE",
-        });
-        if (response.ok) {
-            toast.success("Usuário deletado com sucesso");
-            return true;
+        try {
+            const response = await axios.delete(`http://localhost:3000/user/${user.id}`);
+
+            if (response.status === 200) {
+                toast.success("Usuário deletado com sucesso");
+                return true;
+            }
+        } catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+            toast.error("Erro ao deletar usuário");
         }
     }
     return false;
 }
-export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser };
+export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser, teste };
