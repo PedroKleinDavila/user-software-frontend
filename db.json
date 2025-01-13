@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "email": "pedro@gmail.com",
+      "name": "pedro",
+      "password": "123",
+      "level": 3,
+      "code": 0,
+      "isValid": false,
+      "id": "4f0a"
+    },
+    {
+      "id": "d5b2",
+      "email": "joao@gmail.com",
+      "name": "joao",
+      "password": "123",
+      "level": 2,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "id": "d28d",
+      "email": "asd@gmail.com",
+      "name": "asd",
+      "password": "123",
+      "level": 1,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "email": "pedro@gmail.com",
+      "name": "pedro",
+      "password": "123",
+      "level": 3,
+      "code": 0,
+      "isValid": false,
+      "id": "4f0a"
+    },
+    {
+      "id": "d5b2",
+      "email": "joao@gmail.com",
+      "name": "joao",
+      "password": "123",
+      "level": 2,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "id": "d28d",
+      "email": "asd@gmail.com",
+      "name": "asd",
+      "password": "123",
+      "level": 1,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "email": "pedro@gmail.com",
+      "name": "pedro",
+      "password": "123",
+      "level": 3,
+      "code": 0,
+      "isValid": false,
+      "id": "4f0a"
+    },
+    {
+      "id": "d5b2",
+      "email": "joao@gmail.com",
+      "name": "joao",
+      "password": "123",
+      "level": 2,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "id": "d28d",
+      "email": "asd@gmail.com",
+      "name": "asd",
+      "password": "123",
+      "level": 1,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "email": "pedro@gmail.com",
+      "name": "pedro",
+      "password": "123",
+      "level": 3,
+      "code": 0,
+      "isValid": false,
+      "id": "4f0a"
+    },
+    {
+      "id": "d5b2",
+      "email": "joao@gmail.com",
+      "name": "joao",
+      "password": "123",
+      "level": 2,
+      "code": 0,
+      "isValid": false
+    },
+    {
+      "id": "d28d",
+      "email": "asd@gmail.com",
+      "name": "asd",
+      "password": "123",
+      "level": 1,
+      "code": 0,
+      "isValid": false
+    }
+  ]
+}
