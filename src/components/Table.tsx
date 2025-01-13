@@ -5,7 +5,7 @@ interface CustomTableProps {
     users: { name: string, email: string, level: number }[];
 }
 const CustomTable = ({ editOrDelete, detail,users }: CustomTableProps) => {
-    const userLevel = Number(localStorage.getItem("user"));
+    const userLevel = Number(localStorage.getItem("level"));
     const handleImageClick = async (event: React.MouseEvent<HTMLImageElement>, action: string, email: string) => {
         event.stopPropagation();
         editOrDelete(action, email);
@@ -46,7 +46,7 @@ const CustomTable = ({ editOrDelete, detail,users }: CustomTableProps) => {
                 </Table.Body>
                 <Table.Footer>
                     <Table.Row bg="gray.100">
-                        <Table.Cell colSpan={3}>Total de Usuários: {users.length}</Table.Cell>
+                        <Table.Cell colSpan={4}>Total de Usuários: {users.length}</Table.Cell>
                     </Table.Row>
                 </Table.Footer>
             </Table.Root>

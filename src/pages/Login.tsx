@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import { verificaUsuario, createUser, teste } from "../services/userService";
+import { verificaUsuario, createUser, decodeToken } from "../services/userService";
 import { IUser } from "../types/types";
 
 const Login = () => {
@@ -17,12 +17,14 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLoginClick = async (loginData: IUser) => {
-        const user = await verificaUsuario(loginData);
-        if (user.level) {
-            localStorage.setItem("user", user.level);
-            localStorage.setItem("email", user.email);
+        try {
+            await verificaUsuario(loginData);
+            const token = await decodeToken();
+            localStorage.setItem("email", token.email);
+            localStorage.setItem("level", token.level);
             navigate("/usuarios");
-        } else {
+        } catch (error) {
+            console.error("Error finding user:", error);
             toast.error("Usuário ou senha inválidos");
         }
     };
@@ -48,12 +50,10 @@ const Login = () => {
     const [isLoginVisible, setIsLoginVisible] = useState(true);
 
     const handleChangeTabSignup = () => {
-        teste()
         setIsLoginVisible(false);
     };
 
     const handleChangeTabLogin = () => {
-        teste()
         setIsLoginVisible(true);
     };
 

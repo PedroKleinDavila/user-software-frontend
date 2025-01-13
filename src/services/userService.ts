@@ -1,17 +1,6 @@
 import toast from "react-hot-toast";
 import axios from "axios";
 import { IUser } from "../types/types";
-async function teste() {
-    const response = await axios.get(
-        "http://localhost:3000/user",
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
-    console.log(response.data);
-}
 async function getUsers() {
     const response = await axios.get(
         "http://localhost:3000/user",
@@ -19,6 +8,7 @@ async function getUsers() {
             headers: {
                 "Content-Type": "application/json",
             },
+            withCredentials: true
         }
     );
     const users = response.data;
@@ -35,6 +25,7 @@ async function findUser(email: string) {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                withCredentials: true
             }
         );
         if (response.data && response.data.length !== 0) {
@@ -47,15 +38,23 @@ async function findUser(email: string) {
     }
 }
 async function verificaUsuario(user: IUser) {
-    const response = await axios.get(
-        `http://localhost:3000/user/login?email=${user.email}&password=${user.password}`,
+    const response = await axios.post(
+        'http://localhost:3000/auth/login',
+        {
+            email: user.email,
+            password: user.password
+        },
         {
             headers: {
                 "Content-Type": "application/json",
             },
+            withCredentials: true
         }
     );
-    return response.data;
+    if (response.data) {
+        return response.data;
+    }
+    return { message: "error" };
 }
 async function createUser(user: IUser) {
     const existe = await findUser(user.email);
@@ -65,12 +64,12 @@ async function createUser(user: IUser) {
     }
 
     const finalUser = { email: user.email, name: user.name, password: user.password };
-    console.log(finalUser);
     try {
         const response = await axios.post("http://localhost:3000/user/signup", finalUser, {
             headers: {
                 "Content-Type": "application/json",
             },
+            withCredentials: true
         });
 
         if (response.data) {
@@ -86,20 +85,20 @@ async function createUser(user: IUser) {
 }
 async function updateUser(user: IUser, id: string) {
     try {
-        const response1 = await axios.get(`http://localhost:3000/user/id/${id}`);
+        const response1 = await axios.get(`http://localhost:3000/user/id/${id}`, {withCredentials: true});
         const usuarioAtual = response1.data;
 
         if (usuarioAtual.email === user.email) {
+            console.log("aqui")
             const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level };
             const updateResponse = await axios.put(`http://localhost:3000/user/id/${id}`, finalUser, {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                withCredentials: true
             });
 
             if (updateResponse.data) {
-                localStorage.setItem("user", (finalUser.level).toString());
-                localStorage.setItem("email", finalUser.email);
                 toast.success("Usuário atualizado com sucesso");
                 return true;
             }
@@ -115,6 +114,7 @@ async function updateUser(user: IUser, id: string) {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                withCredentials: true
             });
 
             if (updateResponse.data) {
@@ -148,6 +148,7 @@ async function createUserLoggedIn(user: IUser) {
             headers: {
                 "Content-Type": "application/json",
             },
+            withCredentials: true
         });
 
         if (response.data) {
@@ -173,7 +174,7 @@ async function deleteUser(email: string) {
 
     if (user) {
         try {
-            const response = await axios.delete(`http://localhost:3000/user/${user.id}`);
+            const response = await axios.delete(`http://localhost:3000/user/${user.id}`,{withCredentials: true});
 
             if (response.status === 200) {
                 toast.success("Usuário deletado com sucesso");
@@ -186,4 +187,17 @@ async function deleteUser(email: string) {
     }
     return false;
 }
-export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser, teste };
+async function decodeToken() {
+    const token = await axios.get(
+        "http://localhost:3000/auth/profile",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true
+        }
+    )
+    return token.data;
+}
+export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser, decodeToken };
+

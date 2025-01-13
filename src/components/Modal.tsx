@@ -14,12 +14,12 @@ const Modal = ({ user, id, close, worked }: ModalProps) => {
     const schema = yup.object().shape({
         email: yup.string().email().required(),
         name: yup.string().required(),
-        level: yup.number().required().min(1).max(Number(localStorage.getItem("user"))),
-        password: yup.string().required(),
+        level: yup.number().required().min(1).max(Number(localStorage.getItem("level"))),
+        password: yup.string(),
     });
     const [email, setEmail] = useState(user.email);
     const [name, setName] = useState(user.name);
-    const [password, setPassword] = useState(user.password);
+    const [password, setPassword] = useState("");
     const [level, setLevel] = useState(user.level);
     const yupValidate = async () => {
         try {

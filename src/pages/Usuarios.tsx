@@ -47,13 +47,12 @@ const Usuarios = () => {
     };
     const detail = async (email: string) => {
         const user = await findUser(email);
-        setEmail(user[0].email);
-        setName(user[0].name);
-        setPassword(user[0].password);
-        setLevel(Number(user[0].level));
+        setEmail(user.email);
+        setName(user.name);
+        setLevel(Number(user.level));
         setIsDetailModalOpen(true);
     }
-    const userLevel = Number(localStorage.getItem("user"));
+    const userLevel = Number(localStorage.getItem("level"));
     return (
         <>
             <Global

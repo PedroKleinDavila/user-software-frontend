@@ -36,9 +36,6 @@ const DetailModal = ({ user, close }: ModalProps) => {
                 <Text fontSize="md" mb="1rem">
                     <strong>Nível de Acesso:</strong> {user.level}
                 </Text>
-                <Text fontSize="md" mb="1rem">
-                    <strong>Senha:</strong> {user.password}
-                </Text>
                 <Flex justify="flex-end">
                     <Button
                         bg="gray.500"
