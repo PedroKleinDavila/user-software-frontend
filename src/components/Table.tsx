@@ -22,7 +22,7 @@ const CustomTable = ({ editOrDelete, detail,users }: CustomTableProps) => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {users.map((user: { name: string, email: string, level: number }, index: number) => (
+                    {users.sort((a, b) => a.name.localeCompare(b.name)).map((user: { name: string, email: string, level: number }, index: number) => (
                         <Table.Row key={index} bg="gray.100" _hover={{ bg: "gray.200", cursor: "pointer" }} onClick={() => {
                             detail(user.email)
                         }}>
