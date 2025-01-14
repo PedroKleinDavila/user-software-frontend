@@ -65,7 +65,6 @@ async function logout() {
         }
     );
     if (response.data) {
-        console.log(response.data);
         return response.data;
     }
     return { message: "error" };
@@ -103,7 +102,6 @@ async function updateUser(user: IUser, id: string) {
         const usuarioAtual = response1.data;
 
         if (usuarioAtual.email === user.email) {
-            console.log("aqui")
             const finalUser = { email: user.email, name: user.name, password: user.password, level: user.level };
             const updateResponse = await axios.put(`http://localhost:3000/user/id/${id}`, finalUser, {
                 headers: {
