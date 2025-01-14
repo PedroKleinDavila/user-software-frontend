@@ -15,7 +15,7 @@ const Modal = ({ user, id, close, worked }: ModalProps) => {
         email: yup.string().email().required(),
         name: yup.string().required(),
         level: yup.number().required().min(1).max(Number(localStorage.getItem("level"))),
-        password: yup.string(),
+        password: yup.string().required(),
     });
     const [email, setEmail] = useState(user.email);
     const [name, setName] = useState(user.name);
