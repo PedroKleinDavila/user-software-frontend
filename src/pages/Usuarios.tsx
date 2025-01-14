@@ -5,10 +5,35 @@ import CustomTable from "../components/Table";
 import DeleteModal from "../components/DeleteModal";
 import { Flex, Button, Text, Box } from "@chakra-ui/react";
 import DetailModal from "../components/DetailModal";
-import { findUser, getUsers } from "../services/userService";
+import { decodeToken, findUser, getUsers } from "../services/userService";
 import { IUser } from "../types/types";
 import Sidebar from "../components/Sidebar";
+import { useNavigate } from "react-router";
 const Usuarios = () => {
+    const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            try {
+                const token = await decodeToken();
+                if (token && token.email) {
+                    setIsAuthenticated(true);
+                } else {
+                    setIsAuthenticated(false);
+                    navigate("/");
+                }
+            } catch (error) {
+                console.log("Error finding user:", error);
+                setIsAuthenticated(false);
+                localStorage.removeItem("level");
+                localStorage.removeItem("email");
+                navigate("/");
+            }
+        };
+
+        checkAuthentication();
+    }, [navigate]);
+
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [id, setId] = useState("");
@@ -53,7 +78,8 @@ const Usuarios = () => {
         setIsDetailModalOpen(true);
     }
     const userLevel = Number(localStorage.getItem("level"));
-    return (
+    return isAuthenticated ? (
+
         <>
             <Global
                 styles={{
@@ -125,7 +151,11 @@ const Usuarios = () => {
                 </Box>
             </Flex>
         </>
-    )
+    ) : (
+        <Flex>
+            <p>Não autenticado!</p>
+        </Flex>
+    );
 }
 
 export default Usuarios;

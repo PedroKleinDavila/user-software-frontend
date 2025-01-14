@@ -2,6 +2,7 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cardapio from "../assets/cardapio.png";
+import { logout } from "../services/userService";
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
@@ -55,7 +56,7 @@ const Sidebar = () => {
                         color="white"
                         bg="red.600"
                         _hover={{ bg: "red.500" }}
-                        onClick={() => {navigate("/");localStorage.removeItem("user");localStorage.removeItem("email");}}
+                        onClick={() => {logout();navigate("/")}}
                     >
                         Log out
                     </Button>

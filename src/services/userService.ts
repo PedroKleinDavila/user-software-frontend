@@ -56,6 +56,20 @@ async function verificaUsuario(user: IUser) {
     }
     return { message: "error" };
 }
+async function logout() {
+    const response = await axios.post(
+        "http://localhost:3000/auth/logout",
+        {},
+        {
+            withCredentials: true
+        }
+    );
+    if (response.data) {
+        console.log(response.data);
+        return response.data;
+    }
+    return { message: "error" };
+}
 async function createUser(user: IUser) {
     const existe = await findUser(user.email);
     if (existe !== null) {
@@ -85,7 +99,7 @@ async function createUser(user: IUser) {
 }
 async function updateUser(user: IUser, id: string) {
     try {
-        const response1 = await axios.get(`http://localhost:3000/user/id/${id}`, {withCredentials: true});
+        const response1 = await axios.get(`http://localhost:3000/user/id/${id}`, { withCredentials: true });
         const usuarioAtual = response1.data;
 
         if (usuarioAtual.email === user.email) {
@@ -174,7 +188,7 @@ async function deleteUser(email: string) {
 
     if (user) {
         try {
-            const response = await axios.delete(`http://localhost:3000/user/${user.id}`,{withCredentials: true});
+            const response = await axios.delete(`http://localhost:3000/user/${user.id}`, { withCredentials: true });
 
             if (response.status === 200) {
                 toast.success("Usuário deletado com sucesso");
@@ -199,5 +213,5 @@ async function decodeToken() {
     )
     return token.data;
 }
-export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser, decodeToken };
+export { findUser, verificaUsuario, createUser, getUsers, updateUser, createUserLoggedIn, deleteUser, decodeToken, logout };
 
